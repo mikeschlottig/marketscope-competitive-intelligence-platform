@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import {
   Globe, MapPin, Target, Eye, Edit2, Trash2, ExternalLink,
@@ -25,7 +25,7 @@ const getStatusBadgeVariant = (status: CompetitorData['status']) => {
     case 'archived': return 'outline';
   }
 };
-const MetricDisplay = ({ label, value }: { label: string; value: string | number }) => (
+const MetricDisplay = ({ label, value }: { label: string; value: React.ReactNode }) => (
   <div>
     <span className="text-sm text-muted-foreground">{label}</span>
     <p className="font-semibold text-foreground">{value}</p>
@@ -96,59 +96,61 @@ export const CompetitorTable = ({ competitors, onSelect, sortConfig, handleSort 
   );
   return (
     <Card>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <SortableHeader sortKey="businessName">Business</SortableHeader>
-            <TableHead>Location</TableHead>
-            <SortableHeader sortKey="seoMetrics.organicClicks">Clicks</SortableHeader>
-            <SortableHeader sortKey="seoMetrics.rankingKeywords">Keywords</SortableHeader>
-            <SortableHeader sortKey="seoMetrics.auditScore">Audit Score</SortableHeader>
-            <TableHead className="text-center">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {competitors.map(comp => (
-            <TableRow key={comp.id} className="cursor-pointer" onClick={() => onSelect(comp)}>
-              <TableCell>
-                <div className="font-medium text-foreground">{comp.businessName}</div>
-                <a href={comp.website} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-sm text-muted-foreground hover:underline flex items-center gap-1">
-                  {comp.website.replace('https://', '')} <ExternalLink className="w-3 h-3" />
-                </a>
-              </TableCell>
-              <TableCell>
-                <div>{comp.location.city}, {comp.location.state}</div>
-                {comp.location.distance && <div className="text-xs text-muted-foreground">{comp.location.distance} mi away</div>}
-              </TableCell>
-              <TableCell>{comp.seoMetrics.organicClicks.toLocaleString()}</TableCell>
-              <TableCell>{comp.seoMetrics.rankingKeywords}</TableCell>
-              <TableCell>
-                <Badge variant={comp.seoMetrics.auditScore >= 80 ? 'default' : comp.seoMetrics.auditScore >= 60 ? 'secondary' : 'destructive'}>
-                  {comp.seoMetrics.auditScore}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center justify-center gap-1">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild><Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); onSelect(comp); }}><Eye className="w-4 h-4" /></Button></TooltipTrigger>
-                      <TooltipContent><p>View Details</p></TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                      <TooltipTrigger asChild><Button variant="ghost" size="icon" onClick={e => e.stopPropagation()}><Edit2 className="w-4 h-4" /></Button></TooltipTrigger>
-                      <TooltipContent><p>Edit</p></TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                      <TooltipTrigger asChild><Button variant="ghost" size="icon" onClick={e => e.stopPropagation()}><Trash2 className="w-4 h-4 text-destructive" /></Button></TooltipTrigger>
-                      <TooltipContent><p>Delete</p></TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              </TableCell>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <SortableHeader sortKey="businessName">Business</SortableHeader>
+              <TableHead>Location</TableHead>
+              <SortableHeader sortKey="seoMetrics.organicClicks">Clicks</SortableHeader>
+              <SortableHeader sortKey="seoMetrics.rankingKeywords">Keywords</SortableHeader>
+              <SortableHeader sortKey="seoMetrics.auditScore">Audit Score</SortableHeader>
+              <TableHead className="text-center">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {competitors.map(comp => (
+              <TableRow key={comp.id} className="cursor-pointer" onClick={() => onSelect(comp)}>
+                <TableCell>
+                  <div className="font-medium text-foreground">{comp.businessName}</div>
+                  <a href={comp.website} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-sm text-muted-foreground hover:underline flex items-center gap-1">
+                    {comp.website.replace('https://', '')} <ExternalLink className="w-3 h-3" />
+                  </a>
+                </TableCell>
+                <TableCell>
+                  <div>{comp.location.city}, {comp.location.state}</div>
+                  {comp.location.distance && <div className="text-xs text-muted-foreground">{comp.location.distance} mi away</div>}
+                </TableCell>
+                <TableCell>{comp.seoMetrics.organicClicks.toLocaleString()}</TableCell>
+                <TableCell>{comp.seoMetrics.rankingKeywords}</TableCell>
+                <TableCell>
+                  <Badge variant={comp.seoMetrics.auditScore >= 80 ? 'default' : comp.seoMetrics.auditScore >= 60 ? 'secondary' : 'destructive'}>
+                    {comp.seoMetrics.auditScore}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center justify-center gap-1">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild><Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); onSelect(comp); }}><Eye className="w-4 h-4" /></Button></TooltipTrigger>
+                        <TooltipContent><p>View Details</p></TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild><Button variant="ghost" size="icon" onClick={e => e.stopPropagation()}><Edit2 className="w-4 h-4" /></Button></TooltipTrigger>
+                        <TooltipContent><p>Edit</p></TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild><Button variant="ghost" size="icon" onClick={e => e.stopPropagation()}><Trash2 className="w-4 h-4 text-destructive" /></Button></TooltipTrigger>
+                        <TooltipContent><p>Delete</p></TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </Card>
   );
 };

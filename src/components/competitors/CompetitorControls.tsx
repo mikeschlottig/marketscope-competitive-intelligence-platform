@@ -133,6 +133,15 @@ export function CompetitorControls({
                       onValueChange={([value]) => handleFilterChange('minAuditScore', value)}
                     />
                   </div>
+                  <div className="space-y-3 pt-2">
+                    <Label>Max Distance (mi): {filters.maxDistance}</Label>
+                    <Slider
+                      defaultValue={[filters.maxDistance]}
+                      max={100}
+                      step={1}
+                      onValueChange={([value]) => handleFilterChange('maxDistance', value)}
+                    />
+                  </div>
                 </div>
               </div>
             </PopoverContent>
