@@ -28,11 +28,6 @@ export interface CompetitorData {
   thumbnailUrl?: string;
   status: CompetitorStatus;
 }
-
-export interface CompetitorFormData
-  extends Omit<CompetitorData, 'id' | 'lastUpdated' | 'status' | 'topKeywords'> {
-  topKeywords: string;
-}
 export interface SortConfig {
   key: keyof CompetitorData | `seoMetrics.${keyof CompetitorData['seoMetrics']}` | `location.${keyof CompetitorData['location']}`;
   direction: 'asc' | 'desc';
