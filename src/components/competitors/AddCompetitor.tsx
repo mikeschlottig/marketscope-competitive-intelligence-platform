@@ -14,7 +14,7 @@ import { CompetitorFormData } from '@/data/competitors';
 const competitorFormSchema = z.object({
   businessName: z.string().min(2, { message: "Business name must be at least 2 characters." }),
   website: z.string().url({ message: "Please enter a valid URL." }).startsWith("https://", { message: "URL must start with https://" }),
-  industry: z.string(),
+  industry: z.string().optional(),
   location: z.object({
     city: z.string().min(1, { message: "City is required." }),
     state: z.string().min(1, { message: "State is required." }),
@@ -25,16 +25,15 @@ const competitorFormSchema = z.object({
     domainAuthority: z.coerce.number().min(0, "Must be between 0-100.").max(100, "Must be between 0-100."),
     auditScore: z.coerce.number().min(0, "Must be between 0-100.").max(100, "Must be between 0-100."),
   }),
-  topKeywords: z.string(),
+  topKeywords: z.string().optional(),
 });
-type FormValues = z.infer<typeof competitorFormSchema>;
 interface AddCompetitorProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: CompetitorFormData) => void;
 }
 export function AddCompetitor({ open, onOpenChange, onSubmit }: AddCompetitorProps) {
-  const form = useForm<FormValues>({
+  const form = useForm<CompetitorFormData>({
     resolver: zodResolver(competitorFormSchema),
     defaultValues: {
       businessName: '',
@@ -50,8 +49,8 @@ export function AddCompetitor({ open, onOpenChange, onSubmit }: AddCompetitorPro
       topKeywords: '',
     },
   });
-  const handleFormSubmit = (data: FormValues) => {
-    onSubmit(data as unknown as CompetitorFormData);
+  const handleFormSubmit = (data: CompetitorFormData) => {
+    onSubmit(data);
     form.reset();
   };
   return (

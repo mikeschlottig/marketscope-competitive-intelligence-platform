@@ -18,6 +18,7 @@ interface CompetitorControlsProps {
   setActiveView: (view: ActiveView) => void;
   competitorCount: number;
   totalCount: number;
+  onOpenAdd?: () => void;
 }
 export function CompetitorControls({
   searchQuery,
@@ -28,6 +29,7 @@ export function CompetitorControls({
   setActiveView,
   competitorCount,
   totalCount,
+  onOpenAdd,
 }: CompetitorControlsProps) {
   const handleFilterChange = <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
     setFilters({ ...filters, [key]: value });
@@ -51,7 +53,7 @@ export function CompetitorControls({
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline"><Download className="w-4 h-4 mr-2" /> Export</Button>
-          <Button><Plus className="w-4 h-4 mr-2" /> Add Competitor</Button>
+          <Button onClick={onOpenAdd}><Plus className="w-4 h-4 mr-2" /> Add Competitor</Button>
         </div>
       </div>
       <div className="flex flex-col md:flex-row items-center gap-2">
