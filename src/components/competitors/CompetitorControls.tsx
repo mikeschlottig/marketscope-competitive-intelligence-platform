@@ -35,7 +35,7 @@ export function CompetitorControls({
     setFilters({ ...filters, [key]: value });
   };
   const activeFilterCount = Object.entries(filters).filter(([key, value]) => {
-    if (key === 'industry' && value !== '') return true;
+    if (key === 'industry' && value !== '' && value !== 'all') return true;
     if (key === 'minClicks' && value > 0) return true;
     if (key === 'maxDistance' && value < 100) return true;
     if (key === 'minAuditScore' && value > 0) return true;
@@ -95,7 +95,7 @@ export function CompetitorControls({
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All</SelectItem>
+                        <SelectItem value="all">All</SelectItem>
                         <SelectItem value="Fitness">Fitness</SelectItem>
                         <SelectItem value="Restaurant">Restaurant</SelectItem>
                         <SelectItem value="Legal">Legal</SelectItem>
