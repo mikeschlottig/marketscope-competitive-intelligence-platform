@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { CompetitorControls } from '@/components/competitors/CompetitorControls';
+import AddCompetitor from '@/components/competitors/AddCompetitor';
 import {
   CompetitorList,
   CompetitorTable,
@@ -12,16 +13,20 @@ import {
   CompetitorData,
   FilterState,
   SortConfig,
+  CompetitorFormData,
 } from '@/data/competitors';
+import { v4 } from 'uuid';
+import { toast, Toaster } from 'sonner';
 import { AnimatePresence, motion } from 'framer-motion';
 
 type ActiveView = 'list' | 'table' | 'board' | 'gallery';
 
 export function CompetitorsPage() {
-  const [competitors] = useState<CompetitorData[]>(SAMPLE_COMPETITORS);
+  const [competitors, setCompetitors] = useState<CompetitorData[]>(SAMPLE_COMPETITORS);
   const [activeView, setActiveView] = useState<ActiveView>('list');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCompetitor, setSelectedCompetitor] = useState<CompetitorData | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [sortConfig, setSortConfig] = useState<SortConfig | null>({
     key: 'seoMetrics.organicClicks',
     direction: 'desc',
@@ -33,6 +38,44 @@ export function CompetitorsPage() {
     minAuditScore: 0,
     status: 'all',
   });
+
+  // Load competitors from localStorage (fallback to SAMPLE_COMPETITORS)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('competitors');
+      if (saved) {
+        setCompetitors(JSON.parse(saved) as CompetitorData[]);
+      } else {
+        setCompetitors(SAMPLE_COMPETITORS);
+      }
+    } catch {
+      setCompetitors(SAMPLE_COMPETITORS);
+    }
+  }, []);
+
+  // Persist competitors to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('competitors', JSON.stringify(competitors));
+  }, [competitors]);
+
+  const handleOpenAdd = () => setShowAddModal(true);
+  const handleCloseAdd = () => setShowAddModal(false);
+
+  const handleAddSubmit = useCallback((formData: CompetitorFormData) => {
+    const newComp: CompetitorData = {
+      id: v4(),
+      lastUpdated: new Date().toISOString(),
+      status: 'active',
+      topKeywords: formData.topKeywords
+        .split(',')
+        .map(k => k.trim())
+        .filter(Boolean),
+      ...formData,
+    };
+    setCompetitors(prev => [newComp, ...prev]);
+    toast.success('Competitor added successfully!');
+    setShowAddModal(false);
+  }, []);
 
   const filteredCompetitors = useMemo(() => {
     let filtered = competitors.filter((comp) => {
@@ -130,6 +173,7 @@ export function CompetitorsPage() {
             setActiveView={setActiveView}
             competitorCount={filteredCompetitors.length}
             totalCount={competitors.length}
+            onOpenAdd={handleOpenAdd}
           />
           <div className="mt-8">
             <AnimatePresence mode="wait">
@@ -152,9 +196,17 @@ export function CompetitorsPage() {
         onClose={() => setSelectedCompetitor(null)}
       />
 
+      <AddCompetitor
+        open={showAddModal}
+        onOpenChange={setShowAddModal}
+        onSubmit={handleAddSubmit}
+      />
+
       <footer className="text-center py-4 text-sm text-muted-foreground">
         Built with ❤️ at Cloudflare
       </footer>
+
+      <Toaster richColors />
     </div>
   );
 }

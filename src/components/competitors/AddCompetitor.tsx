@@ -14,7 +14,7 @@ import { CompetitorFormData } from '@/data/competitors';
 const competitorFormSchema = z.object({
   businessName: z.string().min(2, { message: "Business name must be at least 2 characters." }),
   website: z.string().url({ message: "Please enter a valid URL." }).startsWith("https://", { message: "URL must start with https://" }),
-  industry: z.string().optional(),
+  industry: z.string(),
   location: z.object({
     city: z.string().min(1, { message: "City is required." }),
     state: z.string().min(1, { message: "State is required." }),
@@ -25,7 +25,7 @@ const competitorFormSchema = z.object({
     domainAuthority: z.coerce.number().min(0, "Must be between 0-100.").max(100, "Must be between 0-100."),
     auditScore: z.coerce.number().min(0, "Must be between 0-100.").max(100, "Must be between 0-100."),
   }),
-  topKeywords: z.string().optional(),
+  topKeywords: z.string(),
 });
 interface AddCompetitorProps {
   open: boolean;
