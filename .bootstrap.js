@@ -80,7 +80,8 @@ function runSetupCommands() {
     const commands = [
     "bun add uuid",
     "bun add papaparse jspdf jspdf-autotable",
-    "bun add -d @types/papaparse"
+    "bun add -d @types/papaparse",
+    "bun add -D @types/papaparse"
 ];
     
     if (commands.length === 0) {
