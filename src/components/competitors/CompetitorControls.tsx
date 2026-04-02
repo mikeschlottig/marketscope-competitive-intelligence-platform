@@ -1,5 +1,5 @@
 import React from 'react';
-import { Filter, Search, Plus, Download, LayoutList, Columns, LayoutGrid, Eye } from 'lucide-react';
+import { Filter, Search, Plus, Download, LayoutList, Columns, LayoutGrid, Eye, Upload, Calendar, FileText, Table as TableIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { FilterState } from '@/data/competitors';
 type ActiveView = 'list' | 'table' | 'board' | 'gallery';
 interface CompetitorControlsProps {
@@ -19,6 +20,10 @@ interface CompetitorControlsProps {
   competitorCount: number;
   totalCount: number;
   onOpenAdd?: () => void;
+  onOpenImport?: () => void;
+  onExportCSV?: () => void;
+  onExportPDF?: () => void;
+  onOpenSchedule?: () => void;
 }
 export function CompetitorControls({
   searchQuery,
@@ -30,6 +35,10 @@ export function CompetitorControls({
   competitorCount,
   totalCount,
   onOpenAdd,
+  onOpenImport,
+  onExportCSV,
+  onExportPDF,
+  onOpenSchedule,
 }: CompetitorControlsProps) {
   const handleFilterChange = <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
     setFilters({ ...filters, [key]: value });
@@ -51,9 +60,19 @@ export function CompetitorControls({
             Showing {competitorCount} of {totalCount} competitors.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline"><Download className="w-4 h-4 mr-2" /> Export</Button>
-          <Button onClick={onOpenAdd}><Plus className="w-4 h-4 mr-2" /> Add Competitor</Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" onClick={onOpenSchedule}><Calendar className="w-4 h-4 mr-2" /> Schedule</Button>
+          <Button variant="outline" onClick={onOpenImport}><Upload className="w-4 h-4 mr-2" /> Import</Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline"><Download className="w-4 h-4 mr-2" /> Export</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={onExportCSV}><TableIcon className="w-4 h-4 mr-2" /> Export CSV</DropdownMenuItem>
+              <DropdownMenuItem onClick={onExportPDF}><FileText className="w-4 h-4 mr-2" /> Export PDF</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button onClick={onOpenAdd}><Plus className="w-4 h-4 mr-2" /> Add</Button>
         </div>
       </div>
       <div className="flex flex-col md:flex-row items-center gap-2">

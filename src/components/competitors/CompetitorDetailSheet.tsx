@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { CompetitorData } from '@/data/competitors';
-import { Globe, MapPin, TrendingUp, Target, BarChart3, Star, ExternalLink, X } from 'lucide-react';
+import { Globe, MapPin, TrendingUp, Target, BarChart3, Star, ExternalLink, X, RefreshCw } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 const chartData = [
   { name: 'Oct', clicks: 2800 },
@@ -22,8 +22,9 @@ const getAuditScoreColor = (score: number) => {
 interface CompetitorDetailSheetProps {
   competitor: CompetitorData | null;
   onClose: () => void;
+  onRefreshMetrics?: (competitor: CompetitorData) => void;
 }
-export function CompetitorDetailSheet({ competitor, onClose }: CompetitorDetailSheetProps) {
+export function CompetitorDetailSheet({ competitor, onClose, onRefreshMetrics }: CompetitorDetailSheetProps) {
   if (!competitor) return null;
   return (
     <Sheet open={!!competitor} onOpenChange={(open) => !open && onClose()}>
@@ -40,7 +41,14 @@ export function CompetitorDetailSheet({ competitor, onClose }: CompetitorDetailS
         <div className="flex-1 overflow-y-auto pr-6 -mr-6 pl-1">
           <div className="space-y-6 py-6">
             <section>
-              <h3 className="text-lg font-semibold mb-3">Key Metrics</h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-semibold">Key Metrics</h3>
+                {onRefreshMetrics && (
+                  <Button variant="outline" size="sm" onClick={() => onRefreshMetrics(competitor)}>
+                    <RefreshCw className="w-4 h-4 mr-2" /> Refresh
+                  </Button>
+                )}
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-muted/50 p-3 rounded-lg">
                   <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1"><TrendingUp className="w-4 h-4" /> Organic Clicks</div>

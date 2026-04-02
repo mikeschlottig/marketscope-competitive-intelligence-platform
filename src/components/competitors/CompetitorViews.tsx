@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import {
   Globe, MapPin, Target, Eye, Edit2, Trash2, ExternalLink,
-  ArrowUpDown, ArrowUp, ArrowDown
+  ArrowUpDown, ArrowUp, ArrowDown, RefreshCw
 } from 'lucide-react';
 import { CompetitorData, SortConfig } from '@/data/competitors';
 import { Badge } from '@/components/ui/badge';
@@ -39,8 +39,9 @@ interface ViewProps {
   onSelect: (competitor: CompetitorData) => void;
   sortConfig: SortConfig | null;
   handleSort: (key: SortConfig['key']) => void;
+  onRefreshMetrics?: (competitor: CompetitorData) => void;
 }
-export const CompetitorList = ({ competitors, onSelect }: ViewProps) => (
+export const CompetitorList = ({ competitors, onSelect, onRefreshMetrics }: ViewProps) => (
   <div className="space-y-3">
     {competitors.map((comp, index) => (
       <motion.div
@@ -70,6 +71,11 @@ export const CompetitorList = ({ competitors, onSelect }: ViewProps) => (
               </div>
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon" asChild><a href={comp.website} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}><ExternalLink className="w-4 h-4" /></a></Button>
+                {onRefreshMetrics && (
+                  <Button variant="ghost" size="icon" onClick={e => { e.stopPropagation(); onRefreshMetrics(comp); }}>
+                    <RefreshCw className="w-4 h-4" />
+                  </Button>
+                )}
               </div>
             </div>
             <div className="mt-3 pt-3 border-t">
@@ -84,7 +90,7 @@ export const CompetitorList = ({ competitors, onSelect }: ViewProps) => (
     ))}
   </div>
 );
-export const CompetitorTable = ({ competitors, onSelect, sortConfig, handleSort }: ViewProps) => {
+export const CompetitorTable = ({ competitors, onSelect, sortConfig, handleSort, onRefreshMetrics }: ViewProps) => {
   const getSortIcon = (key: SortConfig['key']) => {
     if (!sortConfig || sortConfig.key !== key) return <ArrowUpDown className="w-4 h-4 text-muted-foreground" />;
     return sortConfig.direction === 'asc' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />;
@@ -135,6 +141,12 @@ export const CompetitorTable = ({ competitors, onSelect, sortConfig, handleSort 
                         <TooltipTrigger asChild><Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); onSelect(comp); }}><Eye className="w-4 h-4" /></Button></TooltipTrigger>
                         <TooltipContent><p>View Details</p></TooltipContent>
                       </Tooltip>
+                      {onRefreshMetrics && (
+                        <Tooltip>
+                          <TooltipTrigger asChild><Button variant="ghost" size="icon" onClick={e => { e.stopPropagation(); onRefreshMetrics(comp); }}><RefreshCw className="w-4 h-4" /></Button></TooltipTrigger>
+                          <TooltipContent><p>Refresh Metrics</p></TooltipContent>
+                        </Tooltip>
+                      )}
                       <Tooltip>
                         <TooltipTrigger asChild><Button variant="ghost" size="icon" onClick={e => e.stopPropagation()}><Edit2 className="w-4 h-4" /></Button></TooltipTrigger>
                         <TooltipContent><p>Edit</p></TooltipContent>

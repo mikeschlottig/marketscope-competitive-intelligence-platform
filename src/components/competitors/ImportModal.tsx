@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { CompetitorData } from '@/data/competitors';
+import { v4 } from 'uuid';
 interface ImportModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -28,7 +29,7 @@ export function ImportModal({ open, onOpenChange, onImport }: ImportModalProps) 
       if (data.success && Array.isArray(data.data)) {
         const parsed = data.data.map((item: any) => ({
           ...item,
-          id: item.id || crypto.randomUUID(),
+          id: item.id || v4(),
           lastUpdated: item.lastUpdated || new Date().toISOString(),
           status: item.status || 'active',
           topKeywords: Array.isArray(item.topKeywords) ? item.topKeywords : [],
@@ -64,8 +65,8 @@ export function ImportModal({ open, onOpenChange, onImport }: ImportModalProps) 
           <SheetDescription>Paste CSV or Markdown text to import competitors via AI.</SheetDescription>
         </SheetHeader>
         <div className="flex-1 py-6">
-          <Textarea
-            className="h-full min-h-[300px]"
+          <Textarea 
+            className="h-full min-h-[300px]" 
             placeholder="Paste your CSV or Markdown data here..."
             value={text}
             onChange={(e) => setText(e.target.value)}
