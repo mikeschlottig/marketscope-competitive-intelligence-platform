@@ -17,7 +17,6 @@ import {
   SortConfig,
   CompetitorFormData,
 } from '@/data/competitors';
-import { v4 } from 'uuid';
 import { toast, Toaster } from 'sonner';
 import { AnimatePresence, motion } from 'framer-motion';
 import Papa from 'papaparse';
@@ -63,7 +62,7 @@ export function CompetitorsPage() {
   const handleAddSubmit = useCallback((formData: CompetitorFormData) => {
     const { topKeywords: topKeywordsStr, ...restFormData } = formData;
     const newComp: CompetitorData = {
-      id: v4(),
+      id: crypto.randomUUID(),
       lastUpdated: new Date().toISOString(),
       status: 'active',
       topKeywords: topKeywordsStr
@@ -97,7 +96,7 @@ export function CompetitorsPage() {
         loading: `Refreshing metrics for ${comp.businessName}...`,
         success: (data) => {
           if (data.success && data.data) {
-            setCompetitors(prev => prev.map(c => 
+            setCompetitors(prev => prev.map(c =>
               c.id === comp.id ? { ...c, seoMetrics: { ...c.seoMetrics, ...data.data }, lastUpdated: new Date().toISOString() } : c
             ));
             if (selectedCompetitor?.id === comp.id) {

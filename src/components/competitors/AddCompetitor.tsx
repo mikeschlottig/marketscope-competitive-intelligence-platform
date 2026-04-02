@@ -20,10 +20,10 @@ const competitorFormSchema = z.object({
     state: z.string().min(1, { message: "State is required." }),
   }),
   seoMetrics: z.object({
-    organicClicks: z.preprocess((val) => Number(val), z.number().min(0, "Cannot be negative.").max(1_000_000, "Value too high.")),
-    rankingKeywords: z.preprocess((val) => Number(val), z.number().min(0, "Cannot be negative.").max(100_000, "Value too high.")),
-    domainAuthority: z.preprocess((val) => Number(val), z.number().min(0, "Must be between 0-100.").max(100, "Must be between 0-100.")),
-    auditScore: z.preprocess((val) => Number(val), z.number().min(0, "Must be between 0-100.").max(100, "Must be between 0-100.")),
+    organicClicks: z.coerce.number().min(0, "Cannot be negative.").max(1_000_000, "Value too high."),
+    rankingKeywords: z.coerce.number().min(0, "Cannot be negative.").max(100_000, "Value too high."),
+    domainAuthority: z.coerce.number().min(0, "Must be between 0-100.").max(100, "Must be between 0-100."),
+    auditScore: z.coerce.number().min(0, "Must be between 0-100.").max(100, "Must be between 0-100."),
   }),
   topKeywords: z.string(),
 });
