@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { CompetitorControls } from '@/components/competitors/CompetitorControls';
-import AddCompetitor from '@/components/competitors/AddCompetitor';
+import { AddCompetitor } from '@/components/competitors/AddCompetitor';
 import {
   CompetitorList,
   CompetitorTable,
@@ -62,15 +62,16 @@ export function CompetitorsPage() {
   const handleCloseAdd = () => setShowAddModal(false);
 
   const handleAddSubmit = useCallback((formData: CompetitorFormData) => {
+    const { topKeywords: topKeywordsStr, ...restFormData } = formData;
     const newComp: CompetitorData = {
       id: v4(),
       lastUpdated: new Date().toISOString(),
       status: 'active',
-      topKeywords: formData.topKeywords
+      topKeywords: topKeywordsStr
         .split(',')
         .map(k => k.trim())
         .filter(Boolean),
-      ...formData,
+      ...restFormData,
     };
     setCompetitors(prev => [newComp, ...prev]);
     toast.success('Competitor added successfully!');
