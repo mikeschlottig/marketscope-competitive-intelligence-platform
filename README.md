@@ -1,6 +1,6 @@
 # MarketScope - Competitive Intelligence Platform
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mikeschlottig/marketscope-competitive-intelligence-platform)
 
 ## Overview
 
@@ -71,7 +71,7 @@ All data is client-side with mock competitors for demo purposes. Extend with rea
 
 ## Deployment to Cloudflare
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mikeschlottig/marketscope-competitive-intelligence-platform)
 
 1. **Login to Cloudflare**:
    ```
